@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'movie_mood_recommender.urls'
+ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
     {
@@ -72,6 +72,25 @@ TEMPLATES = [
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True 
+
+# Specify allowed methods and headers
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+CORS_ALLOW_HEADERS = [
+    'Accept',
+    'Authorization',
+    'Content-Type',
+]
+
+# Allow credentials (cookies, authorization headers, etc.) to be included in requests
+CORS_ALLOW_CREDENTIALS = True
 
 WSGI_APPLICATION = 'movie_mood_recommender.wsgi.application'
 
