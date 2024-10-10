@@ -18,8 +18,8 @@ User authentication for saving watchlists (optional)
 Interactive UI with dynamic data fetching using React
 
 
-🛠️ How to Set Up:
-Clone the repository:
+🛠️ How to Set Up:                                                      
+Clone the repository:                            
 https://github.com/Hyrozdmr/-movie_mood_recommender.git              
 Navigate to the backend folder and install dependencies:
 pip install -r requirements.txt
