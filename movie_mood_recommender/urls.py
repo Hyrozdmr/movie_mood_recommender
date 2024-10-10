@@ -15,8 +15,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from recommender import views
+
+# a router and reegister viewsets with it.
+router = DefaultRouter()
+router.register(r'movies', views.MovieViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include(router.urls)),
+    path('', views.home, name='home'),
+    path('recommend/', views.recommend_movie, name='recommend_movie'),
 ]
