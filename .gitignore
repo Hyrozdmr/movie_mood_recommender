@@ -1,0 +1,11 @@
+# Python virtual environment
+movie_env/
+
+# Node.js dependencies
+frontend/node_modules/
+
+# Django migrations
+backend/**/*.pyc
+backend/**/*.pyo
+backend/__pycache__/
+backend/db.sqlite3
