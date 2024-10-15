@@ -15,10 +15,6 @@ class MovieViewSet(viewsets.ModelViewSet):
     # Use MovieSerializer for serialization/deserialization
     serializer_class = MovieSerializer
 
-def home(request):
-    # Render the home.html template
-    return render(request, 'home.html')
-
 def search_movies(request):
     query = request.GET.get('query', '')
     if query:
@@ -65,7 +61,5 @@ def recommend_movie(request):
         recommendations = movie.recommendations()
         # Extract the results from the recommendations
         results = recommendations['results']
-        # Render the recommend.html template with the recommendations
-        return render(request, 'recommend.html', {'recommendations': results})
-    # If it's a GET request, just render the empty form
-    return render(request, 'recommend_form.html')
+        return JsonResponse({'recommendations': results})
+    return JsonResponse({'error': 'Post request required'}, status=400)
