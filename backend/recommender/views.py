@@ -1,65 +1,62 @@
 from rest_framework import viewsets
 from .models import Movie
 from .serializers import MovieSerializer
-from django.shortcuts import render
-from django.conf import settings
-import tmdbsimple as tmdb
-from django.http import JsonResponse
-
-# Set the TMDb API key
-tmdb.API_KEY = settings.TMDB_API_KEY
+from .services import get_movie_details, get_movie_recommendations, search_movies as tmdb_search_movies
+from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
 
 class MovieViewSet(viewsets.ModelViewSet):
-    # Get all Movie objects from the database
+    """
+    ViewSet for performing CRUD operations on Movie model.
+    """
     queryset = Movie.objects.all()
-    # Use MovieSerializer for serialization/deserialization
     serializer_class = MovieSerializer
 
 def search_movies(request):
+    """
+    Searches for movies using a query string from the TMDb API.
+    """
     query = request.GET.get('query', '')
     if query:
-        # Create a TMDb Search object
-        search = tmdb.Search()
-        # Search for movies using the query
-        response = search.movie(query=query)
-        # Extract the results from the response
-        results = response['results']
+        results = tmdb_search_movies(query)
+        if 'error' in results:
+            # Return 500 if there's an error in the API response
+            return HttpResponseServerError(results['error'])
     else:
         results = []
-    # Return the search results as JSON
-    return JsonResponse({'results': results})
+    return JsonResponse({'results': results}, status=200)
 
 def movie_details(request, movie_id):
-    # Create a TMDb Movies object with the given ID
-    movie = tmdb.Movies(movie_id)
-    # Get the movie info
-    info = movie.info()
-    # Get movie credits (cast and crew)
-    credits = movie.credits()
-    # Combine movie info and credits
-    details = {**info, **credits}
-    # Return the movie details as JSON
-    return JsonResponse(details)
+    """
+    Fetches movie details from the TMDb API by movie ID.
+    """
+    details = get_movie_details(movie_id)
+    if 'error' in details:
+        # Return 500 if there's an error in the API response
+        return HttpResponseServerError(details['error'])
+    return JsonResponse(details, status=200)
 
 def recommend_movies(request, movie_id):
-    # Create a TMDb Movies object with the given ID
-    movie = tmdb.Movies(movie_id)
-    # Get movie recommendations
-    recommendations = movie.recommendations()
-    # Extract the results from the recommendations
-    results = recommendations['results']
-    # Return the recommendations as JSON
-    return JsonResponse({'recommendations': results})
+    """
+    Fetches movie recommendations from the TMDb API by movie ID.
+    """
+    recommendations = get_movie_recommendations(movie_id)
+    if 'error' in recommendations:
+        # Return 500 if there's an error in the API response
+        return HttpResponseServerError(recommendations['error'])
+    return JsonResponse({'recommendations': recommendations}, status=200)
 
 def recommend_movie(request):
+    """
+    Recommends movies via POST request, expects a movie ID in the body.
+    """
     if request.method == 'POST':
-        # Get the movie ID from the POST data
         movie_id = request.POST.get('movie_id')
-        # Create a TMDb Movies object with the given ID
-        movie = tmdb.Movies(movie_id)
-        # Get movie recommendations
-        recommendations = movie.recommendations()
-        # Extract the results from the recommendations
-        results = recommendations['results']
-        return JsonResponse({'recommendations': results})
+        if not movie_id:
+            # Return 400 if the movie_id is missing in the POST data
+            return HttpResponseBadRequest("movie_id is required.")
+        recommendations = get_movie_recommendations(movie_id)
+        if 'error' in recommendations:
+            # Return 500 if there's an error in the API response
+            return HttpResponseServerError(recommendations['error'])
+        return JsonResponse({'recommendations': recommendations}, status=200)
     return JsonResponse({'error': 'Post request required'}, status=400)
