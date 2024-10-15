@@ -26,10 +26,9 @@ router.register(r'movies', views.MovieViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('', views.home, name='home'),
-    path('search/', views.search_movies, name='search_movies'),
-    path('movie/<int:movie_id>/', views.movie_details, name='movie_details'),
-    path('recommend/<int:movie_id>/', views.recommend_movies, name='recommend_movies'),
-    path('recommend/', views.recommend_movie, name='recommend_movie'),
+    path('api/search/', views.search_movies, name='search_movies'),
+    path('api/movie/<int:movie_id>/', views.movie_details, name='movie_details'),
+    path('api/recommend/<int:movie_id>/', views.recommend_movies, name='recommend_movies'),
+    path('api/recommend/', views.recommend_movie, name='recommend_movie'),
 ]
 
