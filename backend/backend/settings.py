@@ -25,6 +25,15 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
 TMDB_API_KEY = os.getenv('TMDB_API_KEY')
+
+if not SECRET_KEY:
+    raise ValueError("SECRET_KEY is missing from environment variables")
+
+if not TMDB_API_KEY:
+    raise ValueError("TMDB_API_KEY is missing from environment variables")
+
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -105,14 +114,6 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',  # Use local memory cache
-        'LOCATION': 'unique-snowflake',
     }
 }
 
