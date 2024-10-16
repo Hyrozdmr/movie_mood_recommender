@@ -19,26 +19,30 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from recommender import views
 
-# a router and reegister MovieViewSets with it.
+# A router to register MovieViewSet with it.
 router = DefaultRouter()
 router.register(r'movies', views.MovieViewSet, basename='movie')
 
 urlpatterns = [
-    # django admin route
+    # Django admin route
     path('admin/', admin.site.urls),
 
-    # API routes  
-    path('api/', include(router.urls)), # Registers the viewset for MovieViewSet
+    # Home page route
+    path('', views.home, name='home'),
+
+    # API routes
+    path('api/', include(router.urls)),  # Registers the MovieViewSet
 
     # Custom search and recommendation routes
-
-     # Search movies from TMDb API
+    # Search movies from TMDb API
     path('api/search/', views.search_movies, name='search_movies'),
+    
     # Get movie details from TMDb API
     path('api/movie/<int:movie_id>/', views.movie_details, name='movie_details'),
+    
     # Recommend movies from TMDb API
     path('api/movie/<int:movie_id>/recommend/', views.recommend_movies, name='recommend_movies'),
+    
     # Recommend movies via POST request
     path('api/movie/recommend/', views.recommend_movie, name='recommend_movie'),
 ]
-
