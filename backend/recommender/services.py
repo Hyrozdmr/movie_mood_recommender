@@ -1,5 +1,6 @@
 import tmdbsimple as tmdb
 from django.conf import settings
+from .models import Movie
 
 # Set the TMDb API key
 tmdb.API_KEY = settings.TMDB_API_KEY
@@ -33,3 +34,24 @@ def search_movies(query):
     except Exception as e:
         # Return an error message if the search fails
         return {'error': 'Could not perform search. Please try again later.', 'details': str(e)}
+
+
+def save_movie_from_tmdb(movie_id):
+    movie_data = get_movie_details(movie_id)
+    
+    if 'error' in movie_data:
+        return {'error': 'Failed to fetch movie details from TMDb'}
+
+    title = movie_data.get('title')
+    genres = ', '.join([genre['name'] for genre in movie_data.get('genres', [])])
+    mood = movie_data.get('overview')  # Mapping overview to mood
+
+    movie = Movie(
+        id=movie_data.get('id'),
+        title=title,
+        genre=genres,
+        mood=mood,
+    )
+    movie.save()
+
+    return movie
