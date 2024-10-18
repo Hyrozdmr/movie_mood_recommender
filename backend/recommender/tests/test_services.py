@@ -75,6 +75,7 @@ class SaveMovieFromTMDbTests(TestCase):
         # Retrieve the saved movie from the database
         try:
             saved_movie = Movie.objects.get(id=123)
+            print(f"Saved Movie: {saved_movie}")
             self.assertEqual(saved_movie.id, 123)
             self.assertEqual(saved_movie.title, 'Inception')
             self.assertEqual(saved_movie.genre, 'Action, Science Fiction')
