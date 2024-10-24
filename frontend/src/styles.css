@@ -1,0 +1,28 @@
+/* HomePage.css */
+.HomePage {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .HomePage-header {
+    background-color: #282c34;
+    padding: 40px;
+    color: white;
+  }
+  
+  .HomePage-actions {
+    margin-top: 20px;
+  }
+  
+  .HomePage-button {
+    padding: 10px 20px;
+    margin: 10px;
+    background-color: #61dafb;
+    border: none;
+    color: #282c34;
+    cursor: pointer;
+  }
+  
+  .HomePage-button:hover {
+    background-color: #21a1f1;
+  }
